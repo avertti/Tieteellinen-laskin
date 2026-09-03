@@ -23,7 +23,9 @@ Ohjelma ratkaisee ongelman, jossa käyttäjän kirjoittama matemaattinen lauseke
 ## Syötteet ja niiden käyttö
 
 - Matemaattinen lauseke, joita jäsennetään ja lasketaan
+
 Lauseke voi sisältää:
+
   - lukuarvoja ja muuttujia
   - peruslaskutoimituksia 
   - yhden parametrin funktioita (sqrt, sin)
