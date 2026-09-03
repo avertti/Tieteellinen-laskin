@@ -1,7 +1,9 @@
 # Määrittelydokumentti
 
 Opinto-ohjelma: (TKT) Tietojenkäsittelytieteen kandidaantti
+
 Dokumentaation kieli: Suomi
+
 Ohjelmointikieli: Python
 
 ## Harjoitustyön ydin
