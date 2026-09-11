@@ -6,11 +6,11 @@ Token = namedtuple("Token", ["type", "value"])
 OperatorInfo = namedtuple("operator_info", ["precedence", "associativity"])
 
 operators = {
-    "+": OperatorInfo("0", "L"),
-    "-": OperatorInfo("0", "L"),
-    "*": OperatorInfo("1", "L"),
-    "/": OperatorInfo("1", "L"),
-    "^": OperatorInfo("2", "R"),
+    "+": OperatorInfo(0, "L"),
+    "-": OperatorInfo(0, "L"),
+    "*": OperatorInfo(1, "L"),
+    "/": OperatorInfo(1, "L"),
+    "^": OperatorInfo(2, "R"),
 }
 
 functions = {"sqrt", "sin", "min", "max"}
@@ -70,3 +70,24 @@ def tokenize(expression):
             raise ValueError(f"Virheellinen merkki: {character}")
 
     return tokens
+
+
+def shunting_yard(tokens):
+    """Muunta infix-lausekkeen postfix-muotoon shunting yard algoritmilla"""
+
+    output_queue = []
+    operator_stack = []
+
+    for token in tokens:
+        if token.type == "number" or token.type == "variable":
+            output_queue.append(token)
+
+        elif token.type == "function":
+            operator_stack.append(token)
+
+        elif token.type == "left_parenthesis":
+            operator_stack.append(token)
+
+        elif token.type == "right_parenthesis":
+
+        elif token.type == "operator":
