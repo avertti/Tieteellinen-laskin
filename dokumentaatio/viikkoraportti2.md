@@ -25,7 +25,7 @@
 
 ## Tuntikirjanpito
 
-ma: algoritmin ja tokenisoinnin toiminnasta lukemine 1t, projektin työstäminen 2t
+ma: algoritmin ja tokenisoinnin toiminnasta lukeminen 1t, projektin työstäminen 2t
 
 ti: projektin työstäminen 2t
 
