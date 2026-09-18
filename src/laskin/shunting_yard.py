@@ -76,18 +76,38 @@ def shunting_yard(tokens):
     """Muunta infix-lausekkeen postfix-muotoon shunting yard algoritmilla"""
 
     output_queue = []
-    operator_stack = []
+    token_stack = []
 
     for token in tokens:
         if token.type == "number" or token.type == "variable":
             output_queue.append(token)
 
         elif token.type == "function":
-            operator_stack.append(token)
+            token_stack.append(token)
 
         elif token.type == "left_parenthesis":
-            operator_stack.append(token)
+            token_stack.append(token)
 
         elif token.type == "right_parenthesis":
+            while token_stack and token_stack[-1].type != "left_parenthesis":
+                output_queue.append(token_stack.pop())
+            if not token_stack:
+                raise ValueError("Sulut epätasapainossa")
+            token_stack.pop()
 
         elif token.type == "operator":
+            while (
+                token_stack
+                and token_stack[-1].type == "operator"
+                and operators[token_stack[-1].value].precedence
+                >= operators[token.value].precedence
+            ):
+                output_queue.append(token_stack.pop())
+            token_stack.append(token)
+
+    while token_stack:
+        if token_stack[-1].type == "left_parenthesis":
+            raise ValueError("Sulut epätasapainossa")
+        output_queue.append(token_stack.pop())
+
+    return output_queue
