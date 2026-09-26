@@ -1,7 +1,7 @@
 """Testaa tokenisointia"""
 
 import unittest
-from laskin.shunting_yard import tokenize, Token
+from laskin.shunting_yard import tokenize, Token, shunting_yard
 
 
 class TestTokenize(unittest.TestCase):
@@ -46,7 +46,7 @@ class TestTokenize(unittest.TestCase):
             tokenize(expression)
 
     def test_function_tokens(self):
-        """Testaa funktioiden tokenisointi"""
+        """Testaa funktioiden tokenisoinnin"""
         expression = "sqrt(4) + sin(0)"
         expected_tokens = [
             Token("function", "sqrt"),
@@ -62,7 +62,7 @@ class TestTokenize(unittest.TestCase):
         self.assertEqual(tokenize(expression), expected_tokens)
 
     def test_min_max_tokens(self):
-        """Testaa min ja max funktioiden tokenisointi"""
+        """Testaa min ja max funktioiden tokenisoinnin"""
         expression = "min(1,2) + max(1,2)"
         expected_tokens = [
             Token("function", "min"),
@@ -82,7 +82,7 @@ class TestTokenize(unittest.TestCase):
         self.assertEqual(tokenize(expression), expected_tokens)
 
     def test_variable_tokens(self):
-        """Testaa muuttujien tokenisointi"""
+        """Testaa muuttujien tokenisoinnin"""
         expression = "x + y * 2"
         expected_tokens = [
             Token("variable", "x"),
@@ -92,3 +92,30 @@ class TestTokenize(unittest.TestCase):
             Token("number", 2),
         ]
         self.assertEqual(tokenize(expression), expected_tokens)
+
+    def test_equal_sign_tokens(self):
+        """Testaa yhtäsuuruusmerkin tokenisoinit"""
+        expression = "x = 5"
+        expected_tokens = [
+            Token("variable", "x"),
+            Token("equal_sign", "="),
+            Token("number", 5),
+        ]
+        self.assertEqual(tokenize(expression), expected_tokens)
+
+    def test_paranthesis_error_left(self):
+        """Testaa epeätasapoinsten sulkuje käsittelyn"""
+        expression = "(3 * 2"
+        with self.assertRaises(ValueError):
+            shunting_yard(tokenize(expression))
+
+    def test_paranthesis_error_right(self):
+        """Testaa epeätasapoinsten sulkuje käsittelyn"""
+        expression = "3 * 2)"
+        with self.assertRaises(ValueError):
+            shunting_yard(tokenize(expression))
+
+    def test_comma_error(self):
+        """Testaa virheellisen pilkun käsittelyn"""
+        with self.assertRaises(ValueError):
+            shunting_yard(tokenize("1 + 1, 2"))

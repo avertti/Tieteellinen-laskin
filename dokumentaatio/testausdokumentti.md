@@ -4,11 +4,11 @@
 
 ## Kattavuus raportti
 
-![alt text](image.png)
+![alt text](coverage_2.png)
 
 ## Yksikkö testaus
 
-Algoritmin toiminta on testattu perus syötteillä. Laskeminen on testattu peruslaskutoimituksilla (+,-,*,/). Muutujaan arvon sijoittaminen on testattu myös. Tokenisointi on testattu kaikille mahdollisille syötteille.
+Algoritmin toiminta on testattu perus syötteillä. Laskeminen on testattu peruslaskutoimituksilla (+,-,*,/) ja min, max, sqrt ja sin funktioilla. Muuttujaan arvon sijoittaminen on testattu myös. Tokenisointi on testattu kaikille mahdollisille syötteille. Eri virhe tapauksia on myös testattu.
 
 ## Testien toistaminen
 

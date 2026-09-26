@@ -14,3 +14,11 @@ class TestShuntingYard(unittest.TestCase):
             [token.value for token in equation],
             [3, 4, 2, "*", 3, 1, "-", "/", "+"],
         )
+
+    def test_functions(self):
+        """Testaa algoritmia min,max ja sqrt syötteillä"""
+        equation = shunting_yard(tokenize("min(3, 4) + max(1, 2) + sqrt(64) + sin(0)"))
+        self.assertEqual(
+            [token.value for token in equation],
+            [3, 4, "min", 1, 2, "max", "+", 64, "sqrt", "+", 0, "sin", "+"],
+        )

@@ -47,6 +47,8 @@ def evaluate(rpn_output, variables):
                     stack.append(min(a, b))
 
         elif token.type == "variable":
+            if token.value not in variables:
+                raise ValueError(f"Muuttujaa {token.value} ei ole määritelty")
             stack.append(variables[token.value])
 
     return stack[0]

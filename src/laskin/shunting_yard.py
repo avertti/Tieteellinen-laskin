@@ -66,6 +66,10 @@ def tokenize(expression):
             tokens.append(Token("comma", character))
             i += 1
 
+        elif character == "=":
+            tokens.append(Token("equal_sign", character))
+            i += 1
+
         else:
             raise ValueError(f"Virheellinen merkki: {character}")
 
@@ -94,16 +98,31 @@ def shunting_yard(tokens):
             if not token_stack:
                 raise ValueError("Sulut epätasapainossa")
             token_stack.pop()
+            if token_stack and token_stack[-1].type == "function":
+                output_queue.append(token_stack.pop())
 
         elif token.type == "operator":
             while (
                 token_stack
                 and token_stack[-1].type == "operator"
-                and operators[token_stack[-1].value].precedence
-                >= operators[token.value].precedence
+                and (
+                    operators[token_stack[-1].value].precedence
+                    > operators[token.value].precedence
+                    or (
+                        operators[token_stack[-1].value].precedence
+                        == operators[token.value].precedence
+                        and operators[token.value].associativity == "L"
+                    )
+                )
             ):
                 output_queue.append(token_stack.pop())
             token_stack.append(token)
+
+        elif token.type == "comma":
+            while token_stack and token_stack[-1].type != "left_parenthesis":
+                output_queue.append(token_stack.pop())
+            if not token_stack:
+                raise ValueError("Pilkku virheellisessä paikassa")
 
     while token_stack:
         if token_stack[-1].type == "left_parenthesis":
