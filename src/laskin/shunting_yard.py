@@ -11,6 +11,7 @@ operators = {
     "*": OperatorInfo(1, "L"),
     "/": OperatorInfo(1, "L"),
     "^": OperatorInfo(2, "R"),
+    "-()": OperatorInfo(3, "R"),
 }
 
 functions = {"sqrt", "sin", "min", "max"}
@@ -26,7 +27,6 @@ def tokenize(expression):
     tokens = []
     n = len(expression)
     i = 0
-
     while i < n:
         character = expression[i]
 
@@ -40,7 +40,52 @@ def tokenize(expression):
                 i += 1
             tokens.append(Token("number", int(number)))
 
+        # negatiivisten lukujen tokenisointi
+        elif character == "-":
+
+            if not tokens or tokens[-1].type in {
+                "operator",
+                "left_parenthesis",
+                "comma",
+                "equal_sign",
+            }:
+                i += 1
+
+                while i < n and expression[i] == " ":
+                    i += 1
+
+                if i < n and expression[i] == "-":
+                    raise ValueError("Kaksi peräkkäistä miinusmerkkiä ilman sulkuja")
+
+                if i < n and expression[i] in set("0123456789"):
+                    number = "-"
+
+                    while i < n and expression[i] in set("0123456789"):
+                        number += expression[i]
+                        i += 1
+                    tokens.append(Token("number", int(number)))
+
+                elif i < n and expression[i] == "(" or expression[i].isalpha():
+                    tokens.append(Token("operator", "-()"))
+
+                else:
+                    raise ValueError("Virheellinen merkki miinusluvun jälkeen")
+
+            else:
+                if i + 1 < n and expression[i + 1] == "-":
+                    raise ValueError("Kaksi peräkkäistä miinusmerkkiä ilman sulkuja")
+
+                tokens.append(Token("operator", "-"))
+                i += 1
+
         elif character in operators:
+            if not tokens or tokens[-1].type in {
+                "operator",
+                "left_parenthesis",
+                "comma",
+                "equal_sign",
+            }:
+                raise ValueError(f"Operaattori {character} virheellisessä paikassa")
             tokens.append(Token("operator", character))
             i += 1
 
@@ -78,6 +123,9 @@ def tokenize(expression):
 
 def shunting_yard(tokens):
     """Muunta infix-lausekkeen postfix-muotoon shunting yard algoritmilla"""
+
+    if tokens and tokens[-1].type == "operator":
+        raise ValueError("Lauseke ei voi päättyä operaattoriin")
 
     output_queue = []
     token_stack = []

@@ -12,6 +12,9 @@ def run():
     while True:
         expression = input("Anna lauseke:")
 
+        if not expression.strip():
+            continue
+
         if expression.lower() == "lopeta":
             break
 

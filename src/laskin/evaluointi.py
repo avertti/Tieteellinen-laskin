@@ -17,6 +17,10 @@ def evaluate(rpn_output, variables):
         if token.type == "number":
             stack.append(token.value)
 
+        elif token.type == "operator" and token.value == "-()":
+            a = stack.pop()
+            stack.append(-a)
+
         elif token.type == "operator":
             b = stack.pop()
             a = stack.pop()
@@ -27,6 +31,8 @@ def evaluate(rpn_output, variables):
             elif token.value == "*":
                 stack.append(a * b)
             elif token.value == "/":
+                if b == 0:
+                    raise ValueError("Nollalla jakaminen ei ole sallittua")
                 stack.append(a / b)
             elif token.value == "^":
                 stack.append(a**b)
