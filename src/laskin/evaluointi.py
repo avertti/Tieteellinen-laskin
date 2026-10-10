@@ -38,13 +38,22 @@ def evaluate(rpn_output, variables):
                 stack.append(a**b)
 
         elif token.type == "function":
-            if token.value == "sin" or token.value == "sqrt":
+            if token.value in {"sin", "cos", "tan", "sqrt"}:
+                if len(stack) < 1:
+                    raise ValueError("Funktio tarvitsee yhden argumentin")
                 a = stack.pop()
                 if token.value == "sin":
                     stack.append(math.sin(a))
+                elif token.value == "cos":
+                    stack.append(math.cos(a))
+                elif token.value == "tan":
+                    stack.append(math.tan(a))
                 elif token.value == "sqrt":
                     stack.append(math.sqrt(a))
+
             elif token.value == "max" or token.value == "min":
+                if len(stack) < 2:
+                    raise ValueError("Funktio tarvitsee kaksi argumenttia")
                 b = stack.pop()
                 a = stack.pop()
                 if token.value == "max":

@@ -47,7 +47,7 @@ class TestTokenize(unittest.TestCase):
 
     def test_function_tokens(self):
         """Testaa funktioiden tokenisoinnin"""
-        expression = "sqrt(4) + sin(0)"
+        expression = "sqrt(4) + sin(0) + cos(0) + tan(0)"
         expected_tokens = [
             Token("function", "sqrt"),
             Token("left_parenthesis", "("),
@@ -55,6 +55,16 @@ class TestTokenize(unittest.TestCase):
             Token("right_parenthesis", ")"),
             Token("operator", "+"),
             Token("function", "sin"),
+            Token("left_parenthesis", "("),
+            Token("number", 0),
+            Token("right_parenthesis", ")"),
+            Token("operator", "+"),
+            Token("function", "cos"),
+            Token("left_parenthesis", "("),
+            Token("number", 0),
+            Token("right_parenthesis", ")"),
+            Token("operator", "+"),
+            Token("function", "tan"),
             Token("left_parenthesis", "("),
             Token("number", 0),
             Token("right_parenthesis", ")"),
@@ -119,3 +129,36 @@ class TestTokenize(unittest.TestCase):
         """Testaa virheellisen pilkun käsittelyn"""
         with self.assertRaises(ValueError):
             shunting_yard(tokenize("1 + 1, 2"))
+
+    def test_minus_errors(self):
+        """Testaa virheellisen miinusmerkin käsittelyn"""
+        with self.assertRaises(ValueError):
+            shunting_yard(tokenize("3 + - 2"))
+        with self.assertRaises(ValueError):
+            tokenize("2 + -2")
+        with self.assertRaises(ValueError):
+            shunting_yard(tokenize("3 + (-) 2"))
+        with self.assertRaises(ValueError):
+            shunting_yard(tokenize("3--2"))
+        with self.assertRaises(ValueError):
+            shunting_yard(tokenize("- -3 + 2"))
+
+    def test_operator_errors(self):
+        """Testaa virheellisen operaattorin käsittelyn"""
+        with self.assertRaises(ValueError):
+            shunting_yard(tokenize("+ 3 + 2"))
+        with self.assertRaises(ValueError):
+            shunting_yard(tokenize("3 + * 2"))
+        with self.assertRaises(ValueError):
+            shunting_yard(tokenize("3 / "))
+        with self.assertRaises(ValueError):
+            shunting_yard(tokenize("3 + (^) 2"))
+        with self.assertRaises(ValueError):
+            shunting_yard(tokenize("3 + 2 -"))
+        with self.assertRaises(ValueError):
+            shunting_yard(tokenize("2(3)"))
+
+    def test_missing_operator(self):
+        """Testaa puuttuvan operaattorin käsittelyä"""
+        with self.assertRaises(ValueError):
+            shunting_yard(tokenize("3 2 + 1"))
